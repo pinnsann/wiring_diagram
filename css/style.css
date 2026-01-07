@@ -1,180 +1,442 @@
-:root {
-    --bg-color: #1e1e24;
-    --sidebar-bg: #2b2b36;
-    --text-color: #e0e0e0;
-    --primary-color: #4a90e2;
-    --primary-hover: #357abd;
-    --secondary-color: #555;
-    --danger-color: #e74c3c;
-    --border-color: #444;
-    --input-bg: #333;
-    --shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
+/* Basic styling */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    height: 100vh;
+    background-color: #333;
+    color: #eee;
+    margin: 0;
     overflow: hidden;
+    /* App container handles scroll */
+}
+
+h1,
+h2,
+h3 {
+    margin: 0 0 10px 0;
 }
 
 .app-container {
     display: flex;
-    height: 100%;
+    height: 100vh;
 }
 
-/* Sidebar Styling */
+/* Floating Reset View Button */
+.floating-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 8px 16px;
+    background: rgba(40, 40, 40, 0.8);
+    border: 1px solid #555;
+    color: #eee;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    z-index: 100;
+    /* Above canvas */
+    transition: all 0.2s;
+}
+
+.floating-btn:hover {
+    background: #444;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Sidebar */
 .sidebar {
-    width: 300px;
-    min-width: 300px;
-    flex-shrink: 0;
-    background-color: var(--sidebar-bg);
-    padding: 20px;
+    width: 250px;
+    background-color: #222;
+    border-right: 1px solid #444;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    border-right: 1px solid var(--border-color);
+    min-width: 250px;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.3s ease;
+    overflow: visible;
+    /* Allow button to hang out */
+    z-index: 50;
+}
+
+.sidebar-content {
+    flex: 1;
     overflow-y: auto;
-}
-
-.logo-area h1 {
-    font-size: 1.2rem;
-    color: var(--primary-color);
-}
-
-.control-group {
-    background: rgba(0, 0, 0, 0.2);
     padding: 15px;
-    border-radius: 8px;
+    /* Hide scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
-.control-group h3 {
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #888;
+.sidebar-content::-webkit-scrollbar {
+    display: none;
 }
 
-.control-group h4 {
-    font-size: 0.85rem;
-    margin: 10px 0 5px;
+.sidebar.closed {
+    width: 0;
+    /* Fully collapse the box */
+    min-width: 0;
+    border-right: none;
+    /* Hide border when closed? Or keep line? */
+    /* If border hidden, button floats in space. Let's keep a thin line or just 0. */
+    /* User wants a drawer. */
+}
+
+.sidebar.closed .sidebar-content {
+    display: none;
+}
+
+.sidebar-toggle {
+    position: absolute;
+    top: 140px;
+    right: -28px;
+    /* Fully outside the sidebar */
+    transform: none;
+    width: 28px;
+    height: 50px;
+    /* Make it a vertical tab pill shape per image hints? Or keep circle? User "like image" usually means Tab. */
+    /* User said "Like the image". Image was a pill shape along the edge. */
+    /* Let's make it a vertical semi-circle or pill. */
+    border-radius: 0 10px 10px 0;
+    /* Right-side tab */
+    background: #222;
+    border: 1px solid #444;
+    border-left: none;
+    /* Attach to sidebar */
     color: #aaa;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 101;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
 }
 
+.sidebar-toggle:hover {
+    background: #333;
+    color: #fff;
+}
+
+/* Make inputs responsive in sidebar */
 .input-row {
     display: flex;
     gap: 10px;
-    margin-bottom: 10px;
-}
-
-.input-row label {
-    font-size: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-input[type="number"] {
-    width: 50px;
-    padding: 5px;
-    background: var(--input-bg);
-    border: 1px solid var(--border-color);
-    color: white;
-    border-radius: 4px;
-}
-
-/* Buttons */
-button {
-    width: 100%;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.2s;
     margin-bottom: 5px;
 }
 
-.primary-btn {
-    background-color: var(--primary-color);
+.input-row label {
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    /* Allow labels to share width equally */
+    min-width: 0;
+    /* meaningful for flex */
+}
+
+input[type="number"],
+input[type="text"] {
+    background: #444;
+    border: 1px solid #555;
+    color: #fff;
+    padding: 4px;
+    border-radius: 3px;
+    width: 100%;
+    /* Fill the label container */
+    box-sizing: border-box;
+    /* Include padding in width */
+}
+
+/* Modern Input Focus */
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    /* Blue Glow */
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Modern Input Focus */
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    /* Blue Glow */
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+    /* Standard property */
+}
+
+/* Modern Spin Input Wrapper */
+.spin-wrapper {
+    display: flex;
+    align-items: center;
+    background: #444;
+    border: 1px solid #555;
+    border-radius: 3px;
+    width: 100%;
+    /* Fill container */
+}
+
+.spin-wrapper input[type="number"] {
+    border: none;
+    background: transparent;
+    text-align: center;
+    padding: 4px 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.spin-btn {
+    width: 24px;
+    background: transparent;
+    /* #333 */
+    border: none;
+    color: #bbb;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.spin-btn:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.logo-area {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Center Pin Presets */
+.pin-helpers-container details summary {
+    text-align: center;
+    list-style: none;
+    /* Hide default marker if not handled */
+    width: 100%;
+}
+
+.control-group {
+    background: #2a2a2a;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #333;
+}
+
+button {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
     color: white;
+    transition: background 0.2s;
+}
+
+/* Specific Pin Helper Button Styling for visibility */
+#commonPinBtns button,
+#gpioPinBtns button,
+#libPinHelpers button {
+    background-color: #555;
+    border: 1px solid #777;
+    margin: 2px;
+    padding: 4px 6px;
+}
+
+#commonPinBtns button:hover,
+#gpioPinBtns button:hover,
+#libPinHelpers button:hover {
+    background-color: #777;
+    border-color: #999;
+}
+
+.primary-btn {
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
 }
 
 .primary-btn:hover {
-    background-color: var(--primary-hover);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    box-shadow: 0 6px 8px rgba(37, 99, 235, 0.3);
+    transform: translateY(-1px);
 }
 
-.secondary-btn {
-    background-color: var(--secondary-color);
-    color: white;
+/* "Ghost" / Outline Style for Secondary Buttons */
+.secondary-btn,
+.action-btn {
+    background: transparent;
+    color: #cbd5e1;
+    /* Light gray text */
+    border: 1px solid #475569;
+    /* Slate-600 border */
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.secondary-btn:hover,
+.action-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: #94a3b8;
+    /* Slate-400 */
+    color: #fff;
 }
 
 .secondary-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    background: transparent;
 }
 
 .danger-btn {
-    background-color: var(--danger-color);
-    color: white;
-}
-
-.action-btn {
-    background-color: #333;
-    color: #ccc;
-    border: 1px solid #555;
-}
-
-.action-btn:hover {
-    background-color: #444;
-}
-
-/* Wire Settings */
-.wire-type-toggle {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 10px;
-}
-
-.radio-label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.85rem;
+    background: transparent;
+    color: #ef4444;
+    /* red text */
+    border: 1px solid #ef4444;
+    /* red border */
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 500;
     cursor: pointer;
 }
 
+.danger-btn:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: #f87171;
+    color: #f87171;
+}
+
+.danger-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #475569;
+    color: #475569;
+}
+
+
+
+.action-buttons {
+    margin-top: auto;
+    border-top: 1px solid #333;
+    /* Subtler divider */
+    padding-top: 20px;
+}
+
+/* --- Segmented Control for Wire Type --- */
+.wire-type-toggle {
+    display: flex;
+    background: #1f1f1f;
+    /* darker neutral */
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    /* Clean border */
+    margin-bottom: 15px;
+}
+
+.wire-type-toggle .radio-label {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    margin: 0;
+}
+
+.wire-type-toggle input[type="radio"] {
+    display: none;
+}
+
+.wire-type-toggle span {
+    display: block;
+    padding: 6px 4px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #888;
+    /* Neutral Gray Inactive */
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.wire-type-toggle span:hover {
+    color: #ddd;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.wire-type-toggle input:checked+span {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.4);
+}
+
+/* Custom Scrollbar for Lists in Modals/Sidebar */
+.scrollable-list::-webkit-scrollbar,
+.pin-group::-webkit-scrollbar,
+#gpioPinBtns::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.scrollable-list::-webkit-scrollbar-track,
+.pin-group::-webkit-scrollbar-track,
+#gpioPinBtns::-webkit-scrollbar-track {
+    background: #1f2937;
+    border-radius: 3px;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb,
+.pin-group::-webkit-scrollbar-thumb,
+#gpioPinBtns::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border-radius: 3px;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}
+
+
 .color-palette {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-    margin-top: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
 }
 
 .color-swatch {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     cursor: pointer;
     border: 2px solid transparent;
-    transition: transform 0.1s;
-}
-
-.color-swatch:hover {
-    transform: scale(1.1);
 }
 
 .color-swatch.active {
-    border-color: white;
-    box-shadow: 0 0 5px white;
+    border-color: #fff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
 
 /* Workspace */
@@ -182,33 +444,462 @@ button {
     flex: 1;
     display: flex;
     flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     position: relative;
-    background-color: #121212;
+    overflow: hidden;
 }
 
 .canvas-container {
     flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: auto;
-    cursor: crosshair;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background-color: #1e1e1e;
+    /* Ensure background is dark */
 }
 
+/* Ensure canvas does not shrink */
 canvas {
-    background-color: #252525;
-    /* Board color */
+    background-color: #222;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    border-radius: 4px;
+    display: block;
 }
 
 .status-bar {
-    height: 30px;
-    background-color: var(--sidebar-bg);
+    height: 25px;
+    background: #252525;
+    border-top: 1px solid #333;
     display: flex;
     align-items: center;
-    padding: 0 20px;
-    font-size: 0.8rem;
+    padding: 0 10px;
+    font-size: 11px;
+    color: #aaa;
     gap: 20px;
-    border-top: 1px solid var(--border-color);
+    z-index: 10;
+}
+
+.pin-helpers-container {
+    background: #333;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #444;
+}
+
+.pin-group {
+    margin-bottom: 5px;
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #2a2a2a;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.close-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.lib-editor-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.lib-input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.lib-list-container {
+    max-height: 200px;
+    overflow-y: auto;
+    background: #222;
+    border: 1px solid #444;
+    margin: 10px 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+    font-size: 12px;
+}
+
+th {
+    background-color: #333;
+    position: sticky;
+    top: 0;
+}
+
+tr:hover {
+    background-color: #333;
+}
+
+tr.selected {
+    background-color: #4a5a6a;
+}
+
+.lib-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* Toggle Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 16px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #444;
+    transition: .4s;
+    border-radius: 16px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 12px;
+    width: 12px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #2196F3;
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.slider:before {
+    transform: translateX(14px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Custom Details Summary (PIN) */
+summary {
+    list-style: none;
+    /* Hide default triangle */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    margin-bottom: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 1px solid #444;
+    color: #eee;
+}
+
+summary::-webkit-details-marker {
+    display: none;
+}
+
+summary::after {
+    content: '❯';
+    /* Chevron right */
+    font-size: 12px;
+    color: #888;
+    transition: transform 0.2s;
+}
+
+details[open] summary::after {
+    transform: rotate(90deg);
+    /* Rotate down */
+}
+
+/* Pin Presets - Center Text Balanced */
+.pin-helpers-container details summary {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-weight: 500;
+    color: #e5e7eb;
+    margin-bottom: 8px;
+    padding: 8px 30px 8px 10px;
+    /* Right padding offsets chevron */
+    border-radius: 4px;
+    transition: background 0.2s;
+    cursor: pointer;
+    list-style: none;
+    background: #333;
+    text-align: center;
+    box-sizing: border-box;
+    /* Fix overflow */
+    width: 100%;
+}
+
+/* Position the chevron absolutely to the right */
+.pin-helpers-container details summary::after {
+    position: absolute;
+    right: 10px;
+}
+
+.pin-helpers-container details summary::-webkit-details-marker {
+    display: none;
+}
+
+.pin-helpers-container details summary:hover {
+    background: #444;
+}
+
+.pin-helpers-container details[open] summary {
+    margin-bottom: 5px;
+}
+
+.pin-helpers-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 5px;
+}
+
+/* Modern Library Editor Layout */
+.lib-modal-body {
+    display: flex;
+    gap: 20px;
+    height: 650px;
+    /* Fixed height for modal content */
+}
+
+.lib-list-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.lib-list-container {
+    flex: 1;
+    /* Fill remaining height */
+    overflow-y: auto;
+    background: #222;
+    border: 1px solid #444;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.lib-form-panel {
+    width: 340px;
+    border-left: 1px solid #444;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.lib-form-content {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 8px;
+}
+
+/* Match Input Styles */
+textarea {
+    background: #252525;
+    border: 1px solid #444;
+    color: #eee;
+    padding: 6px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.4;
+    box-sizing: border-box;
+    resize: none !important;
+    overflow: hidden;
+    min-height: 30px;
+    display: block !important;
+    width: 100% !important;
+}
+
+textarea:focus {
+    border-color: #3b82f6;
+    outline: none;
+    background: #333;
+}
+
+.lib-form-panel h4 {
+    margin: 0 0 10px 0;
+    color: #ddd;
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+}
+
+.lib-form-panel label {
+    font-size: 12px;
+    color: #bbb;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.lib-form-panel textarea {
+    background: #333;
+    border: 1px solid #555;
+    color: white;
+    padding: 6px;
+    border-radius: 4px;
+    resize: vertical;
+    font-family: monospace;
+}
+
+/* Make modal wider */
+.modal-content {
+    background-color: #2a2a2a;
+    margin: 5vh auto;
+    /* 5% from top */
+    padding: 20px;
+    border: 1px solid #666;
+    width: 800px;
+    /* Fixed wider width */
+    max-width: 90%;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+
+.pin-group {
+    padding: 5px 0;
+    /* Removed heavy borders and background */
+}
+
+/* Custom Scrollbar for Lists */
+.scrollable-list,
+.pin-group,
+#gpioPinBtns,
+.lib-list-container,
+.pin-helpers-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: #555 #222;
+}
+
+.scrollable-list::-webkit-scrollbar,
+.pin-group::-webkit-scrollbar,
+#gpioPinBtns::-webkit-scrollbar,
+.lib-list-container::-webkit-scrollbar,
+.pin-helpers-wrapper::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.scrollable-list::-webkit-scrollbar-track,
+.pin-group::-webkit-scrollbar-track,
+#gpioPinBtns::-webkit-scrollbar-track,
+.lib-list-container::-webkit-scrollbar-track,
+.pin-helpers-wrapper::-webkit-scrollbar-track {
+    background: #222;
+    border-radius: 3px;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb,
+.pin-group::-webkit-scrollbar-thumb,
+#gpioPinBtns::-webkit-scrollbar-thumb,
+.lib-list-container::-webkit-scrollbar-thumb,
+.pin-helpers-wrapper::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 3px;
+    border: 1px solid #222;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb:hover,
+.pin-group::-webkit-scrollbar-thumb:hover,
+#gpioPinBtns::-webkit-scrollbar-thumb:hover,
+.lib-list-container::-webkit-scrollbar-thumb:hover,
+.pin-helpers-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+/* Pin Helper Buttons (Targeting elements created in JS if possible, or generic button reset) */
+/* Since JS adds inline styles, we can't easily override without !important, but let's try to target them if we can add a class in JS. 
+   Wait, I can't enable JS edit just for class adding easily in this turn if focused on CSS. 
+   But the user complained about "surrounding colors". 
+   Let's check if the container background was the issue. Yes, .pin-group had #222 and borders. 
+   Removing those (above) should fix the "weird enclosure". 
+   
+   If the buttons themselves look weird, it's because they are default browser buttons with inline styles.
+   Let's try to target `button` inside `.pin-group` to make them look better?
+*/
+.pin-group button {
+    background: #444 !important;
+    border: 1px solid #555 !important;
+    color: #ddd !important;
+    border-radius: 3px !important;
+    transition: background 0.2s;
+}
+
+.pin-group button:hover {
+    background: #555 !important;
+    color: white !important;
 }
