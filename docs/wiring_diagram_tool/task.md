@@ -1,0 +1,28 @@
+# Task Checklist: Wiring Diagram Tool (配線図作成ツール)
+
+- [ ] Planning & Design <!-- id: 0 -->
+  - [x] Create project structure (docs folder) <!-- id: 1 -->
+  - [/] Define requirements and questions <!-- id: 2 -->
+  - [x] Generate UI mockup <!-- id: 3 -->
+  - [x] User approval of plan <!-- id: 4 -->
+- [ ] Implementation <!-- id: 5 -->
+  - [x] Initialize project (index.html, styles.css, script.js) <!-- id: 6 -->
+  - [x] Implement Circuit Board Grid (Canvas/SVG) <!-- id: 7 -->
+  - [x] Implement Controls (Hole count, Component size) <!-- id: 8 -->
+  - [x] Implement Wire Controls (10 Colors + Tinned, Front/Back toggle) <!-- id: 8b -->
+  - [x] Implement Drawing Logic (Solid for Front, Dashed for Back) <!-- id: 9 -->
+  - [x] Implement Component Placement Logic <!-- id: 10 -->
+  - [x] Implement Component Labels (Name) input & render <!-- id: 18 -->
+  - [x] Implement Gold Color Sockets for components <!-- id: 19 -->
+  - [x] Implement Off-board Component placement (External devices) <!-- id: 20 -->
+  - [x] Implement Pin Labeling (Socket names) <!-- id: 21 -->
+  - [x] Implement Component Selection & Editing (Update Label/Pins) <!-- id: 22 -->
+  - [x] Implement Wire Selection & Deletion (Delete key) <!-- id: 24 -->
+  - [x] Implement Undo/Redo functionality (Ctrl+Z, Ctrl+Y) <!-- id: 23 -->
+  - [x] Fix Undo bug for Wire addition <!-- id: 25 -->
+  - [x] Implement Save/Load functionality (JSON) <!-- id: 11 -->
+  - [x] Implement Export to Image <!-- id: 12 -->
+- [ ] Verification <!-- id: 13 -->
+  - [ ] Manual test: Create a Board with custom size <!-- id: 14 -->
+  - [ ] Manual test: Place components and drag them <!-- id: 15 -->
+  - [ ] Manual test: Save circuit to JSON and Load it back <!-- id: 16 -->
